@@ -1,66 +1,71 @@
-var createSongRow = function (songNumber, songName, songLength) {
+var createSongRow = function(songNumber, songName, songLength) {
   var template =
-     '<tr class="album-view-song-item">'
-   + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
-   + '  <td class="song-item-title">' + songName + '</td>'
-   + '  <td class="song-item-duration">' + songLength + '</td>'
-   + '</tr>'
-   ;
+    '<tr class="album-view-song-item">' +
+    '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>' +
+    '  <td class="song-item-title">' + songName + '</td>' +
+    '  <td class="song-item-duration">' + songLength + '</td>' +
+    '</tr>';
 
-   var handleSongClick = function() {
-     var clickedSongNumber = $(this).attr('data-song-number');
+  var handleSongClick = function() {
+    var clickedSongNumber = $(this).attr('data-song-number');
 
-     // 1. There is a song that is currently playing
-     if (currentlyPlayingSongNumber !== null) {
-       var currentlyPlayingCell = $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]');
+    // 1. There is a song that is currently playing
+    if (currentlyPlayingSongNumber !== null) {
+      var currentlyPlayingCell = $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]');
 
-       currentlyPlayingCell.html(currentlyPlayingSongNumber);
-     }
-     // 2. There is a song currently playing, but a different one was clicked to play
-     if (clickedSongNumber !== currentlyPlayingSongNumber) {
-       currentlyPlayingSongNumber = clickedSongNumber;
+      currentlyPlayingCell.html(currentlyPlayingSongNumber);
+    }
 
-       // set up the song to play
+    // 2. There is a song currently playing, but a different one was clicked to play
+    if (clickedSongNumber !== currentlyPlayingSongNumber) {
+      currentlyPlayingSongNumber = clickedSongNumber;
+
+      // set up the song to play
       setSong(songNumber);
       currentSoundFile.play();
 
-       $(this).html(pauseButtonTemplate);
-       // 3. The currently playing song was clicked
-     } else {
-       currentlyPlayingSongNumber = null;
-       currentSoundFile.pause();
-       $(this).html(clickedSongNumber);
-     }
-   };
+      $(this).html(pauseButtonTemplate);
+      // 3. The currently playing song was clicked
+    } else if (clickedSongNumber === currentlyPlayingSongNumber) {
+      currentSoundFile.togglePlay();
+      $(this).html(pauseButtonTemplate);
+    }
 
-   var onHover = function() {
-     var songItem = $(this).find('.song-item-number');
-     var songNumber = songItem.attr('data-song-number');
+    var $currentSongName = $('.song-name')
+    $currentSongName.text(currentAlbum.songs[currentlyPlayingSongNumber - 1].title)
 
-     // if the song being hovered over isn't the one being played
-     if (songNumber !== currentlyPlayingSongNumber) {
-       // show the play button
-       songItem.html(playButtonTemplate);
-     }
-   };
+    var $currentSongArtist = $('.artist-name')
+    $currentSongArtist.text(currentAlbum.artist)
+  };
 
-   var offHover = function() {
-     var songItem = $(this).find('.song-item-number');
-     var songNumber = songItem.attr('data-song-number');
+  var onHover = function() {
+    var songItem = $(this).find('.song-item-number');
+    var songNumber = songItem.attr('data-song-number');
 
-     // if the song being hovered over isn't the one being played
-     if (songNumber !== currentlyPlayingSongNumber) {
-       // revert back to just showing the song number
-       songItem.html(songNumber);
-     }
-   };
+    // if the song being hovered over isn't the one being played
+    if (songNumber !== currentlyPlayingSongNumber) {
+      // show the play button
+      songItem.html(playButtonTemplate);
+    }
+  };
 
-   var $row = $(template);
+  var offHover = function() {
+    var songItem = $(this).find('.song-item-number');
+    var songNumber = songItem.attr('data-song-number');
 
-   $row.find('.song-item-number').click(handleSongClick);
-   $row.hover(onHover, offHover);
+    // if the song being hovered over isn't the one being played
+    if (songNumber !== currentlyPlayingSongNumber) {
+      // revert back to just showing the song number
+      songItem.html(songNumber);
+    }
+  };
 
-   return $row;
+  var $row = $(template);
+
+  $row.find('.song-item-number').click(handleSongClick);
+  $row.hover(onHover, offHover);
+
+  return $row;
 };
 
 var setCurrentAlbum = function(album) {
@@ -85,16 +90,32 @@ var setCurrentAlbum = function(album) {
   }
 };
 
-var setSong = function (songNumber) {
+var setSong = function(songNumber) {
   if (currentSoundFile) {
-    currentSoundFile.pause();
+    currentSoundFile.stop();
   }
-  var songUrl = currentAlbum.songs[songNumber - 1].audioUrl;
+
+  var songUrl = currentAlbum.songs[currentlyPlayingSongNumber - 1].audioUrl;
+
   currentSoundFile = new buzz.sound(songUrl, {
-    formats: [ 'mp3' ],
-    preload: true,
+    formats: ['mp3'],
+    preload: true
   });
-};
+}
+
+var $nextAlbumText = $('.album-next');
+
+$nextAlbumText.click(function () {
+  var index = albums.indexOf(currentAlbum)
+  if (!currentAlbum) {
+    setCurrentAlbum(albums[0])
+  } else if (albums[index + 1] === undefined ) {
+    return alert(`NO MORE ALBUMS`);
+  } else {
+    setCurrentAlbum(albums[index + 1]);
+  }
+})
+
 
 var currentSoundFile = null;
 var currentlyPlayingSongNumber = null;
@@ -102,4 +123,4 @@ var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause">
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
 var currentAlbum = null;
 
-setCurrentAlbum(albums[0]);
+//setCurrentAlbum(albums[0]);

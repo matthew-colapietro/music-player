@@ -7,6 +7,10 @@ body.album {
   padding-bottom: 200px;
 }
 
+.album-next {
+  color: #c496ff;
+}
+
 .album-cover-art {
   position: relative;
   left: 20%;
