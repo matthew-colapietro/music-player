@@ -7,7 +7,7 @@ body.album {
   padding-bottom: 200px;
 }
 
-.album-next {
+.album-next, .album-previous {
   color: #c496ff;
 }
 

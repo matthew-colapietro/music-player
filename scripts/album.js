@@ -104,6 +104,7 @@ var setSong = function(songNumber) {
 }
 
 var $nextAlbumText = $('.album-next');
+var $previousAlbumText = $('.album-previous');
 
 $nextAlbumText.click(function () {
   var index = albums.indexOf(currentAlbum)
@@ -113,6 +114,17 @@ $nextAlbumText.click(function () {
     return alert(`NO MORE ALBUMS`);
   } else {
     setCurrentAlbum(albums[index + 1]);
+  }
+})
+
+$previousAlbumText.click(function () {
+  var index = albums.indexOf(currentAlbum)
+  if (!currentAlbum) {
+    setCurrentAlbum(albums[0])
+  } else if (albums[index - 1] === undefined ) {
+    return;
+  } else {
+    setCurrentAlbum(albums[index - 1]);
   }
 })
 
