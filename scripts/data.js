@@ -14,7 +14,7 @@ var albums = [
       { title: 'The Literal Heart', duration: 360, audioUrl: 'assets/music/the-literal-heart' },
       { title: 'Stoic', duration: 144, audioUrl: 'assets/music/stoic' },
       { title: 'Undress', duration: 307, audioUrl: 'assets/music/undress' },
-      { title: 'Reether', duration: 257, audioUrl: 'assets/music/reether' },
+      { title: 'Reether', duration: 257, audioUrl: 'assets/music/reeth' },
       { title: 'Thunder', duration: 182, audioUrl: 'assets/music/thunder' },
       { title: 'Honest Wage', duration: 388, audioUrl: 'assets/music/honest-wage' },
       { title: 'Fantine', duration: 102, audioUrl: 'assets/music/fantine' }
